@@ -3,24 +3,41 @@ import _ from 'lodash'
 
 const tree = fsTrees.mkdir('/', [
   fsTrees.mkdir('etc', [
-    fsTrees.mkfile('bashrc'),
-    fsTrees.mkfile('consul.cfg'),
+    fsTrees.mkdir('apache'),
+    fsTrees.mkdir('nginx', [
+      fsTrees.mkfile('nginx.conf'),
+    ]),
   ]),
-  fsTrees.mkfile('hexletrc'),
-  fsTrees.mkdir('bin', [
-    fsTrees.mkfile('ls'),
-    fsTrees.mkfile('cat'),
+  fsTrees.mkdir('consul', [
+    fsTrees.mkfile('config.json'),
+    fsTrees.mkfile('file.tmp'),
+    fsTrees.mkdir('data'),
   ]),
+  fsTrees.mkfile('hosts'),
+  fsTrees.mkfile('resolve'),
 ])
 
-const getNodesCount = (tree) => {
+const getFilesCount = (tree) => {
   if (fsTrees.isFile(tree)) {
     return 1
   }
 
   const children = fsTrees.getChildren(tree)
-  const descendantCounts = children.map(getNodesCount)
-  return 1 + _.sum(descendantCounts)
+  const filesCounts = children.map(getFilesCount)
+  return _.sum(filesCounts)
 }
 
-console.log(getNodesCount(tree))
+const getSubdirectoriesInfo = (node) => {
+  if (fsTrees.isFile(node)) {
+    return 0
+  }
+
+  const children = fsTrees.getChildren(node)
+  const subdirectoriesInfos = children
+    .filter(fsTrees.isDirectory)
+    .map(child => ({ name: fsTrees.getName(child), filesCount: getFilesCount(child) }))
+
+  return subdirectoriesInfos
+}
+
+console.log(getSubdirectoriesInfo(tree))
