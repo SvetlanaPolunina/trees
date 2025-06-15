@@ -12,5 +12,12 @@
   "dependencies": {
     "@hexlet/immutable-fs-trees": "^0.7.2",
     "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@eslint/create-config": "^1.9.0",
+    "@eslint/js": "^9.29.0",
+    "@stylistic/eslint-plugin": "^4.4.1",
+    "eslint": "^9.29.0",
+    "globals": "^16.2.0"
   }
 }
